@@ -1,4 +1,4 @@
-REATE TABLE IF NOT EXISTS customer (
+CREATE TABLE IF NOT EXISTS customer (
     id INT AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     telephone VARCHAR(255) NOT NULL,
@@ -20,4 +20,9 @@ CREATE TABLE IF NOT EXISTS items (
     item_price VARCHAR(255) NOT NULL,
     available BOOLEAN,
     PRIMARY KEY (item_id)
+)  ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS admin (
+    name VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
 )  ENGINE=INNODB;

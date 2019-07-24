@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const mysql = require('mysql')
+const crypto = require('crypto')
 const { database } = require('../keys')
 
 
@@ -131,16 +132,51 @@ app.delete('/item/:item_id', async (req, res) => {
 
 app.put('/item/:item_id', async (req, res) => {
     const { order_id, item_name, item_price, available } = req.body
-    const updatedItem = {
+    const updateItem = {
         order_id,
         item_name,
         item_price,
         available
     }
-    await pool.query(updateUser, [updatedItem, req.params.item_id], () => {
+    await pool.query(updatedItem, [updateItem, req.params.item_id], () => {
         res.send(req.params.item_id + ' was updated successfully')
     })
 })
+
+//setup auth api rest
+// const signup = 'INSERT INTO admin set ?'
+const signin = 'SELECT * FROM admin WHERE name = ?'
+
+// app.post('/register', async (req, res) => {
+//     const { name, password } = req.body
+//     const newAdmin = {
+//         name,
+//         password: crypto.createHash('md5').update(password).digest('hex')
+//     }
+//     await pool.query(signup, [newAdmin], () => {
+//         res.send('user added')
+//     })
+// })
+
+app.get('/auth', async (req, res) => {
+    const { name, password } = req.body
+    const newAdmin = {
+        name,
+        password: crypto.createHash('md5').update(password).digest('hex')
+    }
+    pool.query(signin, [name], (err, rows) => {
+        if (rows.length === 0){
+            res.send('error')
+        }else{
+            if (rows[0].password === newAdmin.password){
+                res.send('welcome nigga')
+            }else{
+                res.send('wrong password')
+            }
+        }
+    })
+})
+
 
 
 
